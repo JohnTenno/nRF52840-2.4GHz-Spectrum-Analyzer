@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.4GHz Spectrum</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h1>2.4GHz Spectrum <span class="sub">· nRF52840</span></h1>
+    <button id="connect" class="primary">Connect scanner</button>
+    <button id="connectBle" class="ble">Connect BLE identifier</button>
+    <button id="pause" title="spacebar">Pause</button>
+    <button id="peakreset">Reset peak</button>
+    <button id="export">PNG</button>
+    <select id="speed" disabled
+      title="dwell per channel — longer listen = more burst-sensitive; shorter = more sweeps/s">
+      <option value="2000" selected>Sensitive (~6/s)</option>
+      <option value="500">Balanced (~20/s)</option>
+      <option value="200">Fast (~39/s)</option>
+      <option value="50">Turbo (~77/s)</option>
+    </select>
+    <span id="status">disconnected</span>
+    <div class="toggles">
+      <label><input type="checkbox" id="tgWifi" checked> WiFi channels</label>
+      <label><input type="checkbox" id="tgBle" checked> BLE advertising</label>
+    </div>
+  </header>
+
+  <div id="stats">
+    <div class="stat">
+      <div class="label">current peak</div>
+      <div class="value" id="stMax">—</div>
+    </div>
+    <div class="stat">
+      <div class="label">busiest channel</div>
+      <div class="value" id="stBusy">—</div>
+    </div>
+    <div class="stat">
+      <div class="label">occupancy &gt;-70dBm</div>
+      <div class="value" id="stOcc">—</div>
+    </div>
+    <div class="stat">
+      <div class="label">sweeps/s</div>
+      <div class="value" id="stRate">—</div>
+    </div>
+    <div class="stat">
+      <div class="label">BLE packets/s</div>
+      <div class="value" id="stBlePps">—</div>
+    </div>
+  </div>
+
+  <div id="main">
+    <div id="viz">
+      <canvas id="bars"></canvas>
+      <canvas id="freqaxis"></canvas>
+      <canvas id="waterfall"></canvas>
+      <div id="legend"><span>-100</span>
+        <div id="legendbar"></div><span>-30 dBm</span>
+      </div>
+    </div>
+
+    <div id="devpanel">
+      <h2>BLE devices <span class="count" id="devcount"></span></h2>
+      <div id="devlist">
+        <div id="devempty">connect the second nRF<br>(ble_identifier firmware)</div>
+      </div>
+      <div class="panelhint">
+        <b>Click a device</b> to highlight its packets on the waterfall.
+        % = share of captured BLE traffic (30s window). Only standard BLE
+        advertisers show up — proprietary protocols (VR dongles, 2.4GHz mice)
+        are visible in the spectrum but cannot be named. Apple MACs rotate
+        every so often.
+      </div>
+    </div>
+  </div>
+
+  <div id="tooltip"></div>
+
+  <footer>
+    Hover the charts to read frequency and level ·
+    <kbd>space</kbd> pauses · the gray line is the all-time maximum (peak hold) ·
+    close any other program using the ports before connecting ·
+    firmware (nRF52840, double-tap reset and drag onto the NICENANO drive):
+    <a href="firmware/spectrum_scanner.uf2" download>scanner.uf2</a> ·
+    <a href="firmware/ble_identifier.uf2" download>identifier.uf2</a>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
